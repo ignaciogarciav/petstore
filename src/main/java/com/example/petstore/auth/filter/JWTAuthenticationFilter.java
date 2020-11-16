@@ -19,6 +19,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.example.petstore.auth.service.JWTService;
 import com.example.petstore.auth.service.impl.JWTServiceImpl;
+import com.example.petstore.entity.UserEntity;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -30,7 +33,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTService jwtService) {
 		this.authenticationManager = authenticationManager;
-		setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/auth", "POST"));
+		setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "GET"));
 		this.jwtService = jwtService;
 	}
 
@@ -40,6 +43,30 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
+		if(username != null && password !=null) {
+			logger.info("Username desde request parameter (form-data): " + username);
+			logger.info("Password desde request parameter (form-data): " + password);
+			
+		} else {
+			UserEntity userEntity = null;
+			try {
+				
+				userEntity = new ObjectMapper().readValue(request.getInputStream(), UserEntity.class);
+				
+				username = userEntity.getUsername();
+				password = userEntity.getPassword();
+				
+				logger.info("Username desde request InputStream (raw): " + username);
+				logger.info("Password desde request InputStream (raw): " + password);
+				
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		username = username.trim();
 
 		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
@@ -57,7 +84,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("token", token);
 		body.put("user", (User) authResult.getPrincipal());
-		body.put("mensaje", String.format("Hola %s, has iniciado sesion con exito!", ((User) authResult.getPrincipal()).getUsername()));
+		body.put("mensaje", String.format("Hello %s, successful login!", ((User) authResult.getPrincipal()).getUsername()));
 		
 		response.getWriter().write(new ObjectMapper().writeValueAsString(body));
 		response.setStatus(200);
