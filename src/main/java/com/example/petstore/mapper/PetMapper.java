@@ -18,7 +18,6 @@ public class PetMapper {
 
 	public PetEntity mapToEntity(Pet pet) {
 		PetEntity petEntity = new PetEntity();
-		petEntity.setId(pet.getId());
 		petEntity.setCategory(categoryMapper.mapToEntity(pet.getCategory()));
 		petEntity.setName(pet.getName());
 		petEntity.setPhotoUrls(pet.getPhotoUrls());
@@ -28,7 +27,7 @@ public class PetMapper {
 	}
 
 	public void updateEntity(PetEntity petEntity, Pet pet) {
-		petEntity.setCategory(categoryMapper.updateEntity(petEntity.getCategory(), pet.getCategory()));
+		petEntity.setCategory(categoryMapper.mapToEntity(pet.getCategory()));
 		petEntity.setName(pet.getName());
 		petEntity.setPhotoUrls(pet.getPhotoUrls());
 		petEntity.setTags(tagMapper.mapListToEntity(pet.getTags()));

@@ -50,7 +50,6 @@ public class PetController implements PetApi{
 
 	@Override
 	public ResponseEntity<ResponseApi> updatePet(Long petId, @Valid Pet body) {
-		// TODO Auto-generated method stub
 		return ResponseEntity.ok(petService.updatePet(petId, body));
 	}
 
@@ -61,8 +60,7 @@ public class PetController implements PetApi{
 
 	@Override
 	public ResponseEntity<ResponseApi> uploadFile(Long petId, String additionalMetadata, MultipartFile file) {
-		// TODO Auto-generated method stub
-		return null;
+		return ResponseEntity.ok(petService.uploadFile(petId, file));
 	}
 
 }

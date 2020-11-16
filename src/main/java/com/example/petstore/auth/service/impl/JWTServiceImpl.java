@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 
 import com.example.petstore.auth.service.JWTService;
@@ -14,7 +14,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-@Service
+@Component
 public class JWTServiceImpl implements JWTService {
 	
 	public static final String SECRET = Base64Utils.encodeToString("Alguna clave secreta".getBytes());
@@ -28,7 +28,9 @@ public class JWTServiceImpl implements JWTService {
 		String username = ((User) auth.getPrincipal()).getUsername();
 		String token = Jwts.builder().setSubject(username)
 				.signWith(SignatureAlgorithm.HS256, SECRET.getBytes()).setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE)).compact();
+				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE))
+				.signWith(SignatureAlgorithm.HS256, SECRET)
+				.compact();
 		return token;
 	}
 

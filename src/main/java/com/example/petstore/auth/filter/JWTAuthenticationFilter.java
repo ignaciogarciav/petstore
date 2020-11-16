@@ -25,26 +25,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private AuthenticationManager authenticationManager;
+	
 	private JWTService jwtService;
+	
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTService jwtService) {
 		this.authenticationManager = authenticationManager;
-		setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "GET"));
+		setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/auth", "POST"));
 		this.jwtService = jwtService;
 	}
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
-		String username = obtainUsername(request);
-		String password = obtainPassword(request);
-
-		if (username == null) {
-			username = "";
-		}
-
-		if (password == null) {
-			password = "";
-		}
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
 
 		username = username.trim();
 

@@ -1,6 +1,7 @@
 package com.example.petstore.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -51,11 +52,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseApi login(String username, String password) {
-		UserEntity userEntity = userRepository.findByUsername(username);
-		if (userEntity.getPassword().equals(password)) {
-			return responseFactory.createNew200Response();
+		Optional<UserEntity> userEntityOptional = userRepository.findByUsername(username);
+		if (userEntityOptional.isPresent()) {
+			UserEntity userEntity = userEntityOptional.get();
+			if (userEntity.getPassword().equals(password)) {
+				return responseFactory.createNew200Response();
+			} else {
+				throw new NullPointerException("Invalid username or password");
+			}
+		} else {
+			throw new ResourceNotFoundException("Invalid username or password");
 		}
-		throw new ResourceNotFoundException();
 	}
 
 	@Override
@@ -66,11 +73,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findUserByUsername(String username) {
-		try {
-			return userMapper.mapToDTO(userRepository.findByUsername(username));
-		} catch (ResourceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		Optional<UserEntity> userEntityOptional = userRepository.findByUsername(username);
+		if (userEntityOptional.isPresent()) {
+			return userMapper.mapToDTO(userEntityOptional.get());
+		} else {
 			throw new ResourceNotFoundException();
 		}
 
@@ -78,27 +84,23 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseApi updateUserByUsername(String username, User user) {
-		try {
-			UserEntity userEntity = userRepository.findByUsername(username);
-			userMapper.updateEntity(userEntity, user);
-			userRepository.save(userEntity);
+		Optional<UserEntity> userEntityOptional = userRepository.findByUsername(username);
+		if (userEntityOptional.isPresent()) {
+			userMapper.updateEntity(userEntityOptional.get(), user);
+			userRepository.save(userEntityOptional.get());
 			return responseFactory.createNew200Response();
-		} catch (ResourceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
 			throw new ResourceNotFoundException();
 		}
 	}
 
 	@Override
 	public ResponseApi deleteUserByUsername(String username) {
-		try {
-			UserEntity userEntity = userRepository.findByUsername(username);
-			userRepository.delete(userEntity);
+		Optional<UserEntity> userEntityOptional = userRepository.findByUsername(username);
+		if (userEntityOptional.isPresent()) {
+			userRepository.delete(userEntityOptional.get());
 			return responseFactory.createNew200Response();
-		} catch (ResourceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
 			throw new ResourceNotFoundException();
 		}
 

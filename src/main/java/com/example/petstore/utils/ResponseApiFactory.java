@@ -4,9 +4,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.RollbackException;
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.example.generated.model.ResponseApi;
 import com.example.petstore.exceptions.ResourceNotFoundException;
@@ -45,30 +50,33 @@ public class ResponseApiFactory extends ResponseApi {
 		response.setMessage("Server error");
 		return response;
 	}
-	public ResponseApi createNewInvalidStatusResponse() {
+
+	public ResponseApi createNewNullPointerExceptionResponse(NullPointerException ex) {
 		ResponseApi response = new ResponseApi();
 		response.setTimestamp(new Date());
 		response.setStatus(StatusEnum._400_BAD_REQUEST);
-		response.setMessage("Invalid status");
+		response.setMessage(ex.getMessage());
 		return response;
 	}
-	public ResponseApi createNewInvalidTypeResponse() {
+
+	public ResponseApi createNewInvalidTypeResponse(MethodArgumentTypeMismatchException ex) {
 		ResponseApi response = new ResponseApi();
 		response.setTimestamp(new Date());
 		response.setStatus(StatusEnum._400_BAD_REQUEST);
-		response.setMessage("Invalid criteria");
+		response.setMessage(ex.getName() + " should be type of " + ex.getRequiredType().getName());
 		return response;
 	}
-	
-	public ResponseApi createNewUniqueConstraintViolationResponse(){
+
+	public ResponseApi createNewUniqueConstraintViolationResponse(
+			org.hibernate.exception.ConstraintViolationException ex) {
 		ResponseApi response = new ResponseApi();
 		response.setTimestamp(new Date());
 		response.setStatus(StatusEnum._400_BAD_REQUEST);
-		response.setMessage("Some fields are not unique!");
+		response.setMessage(ex.getCause().getLocalizedMessage().substring(0, 37));
 		return response;
 	}
-	
-	public Map<String, ResponseApi> createNewMethodArgumentViolationResponse(MethodArgumentNotValidException ex){
+
+	public Map<String, ResponseApi> createNewMethodArgumentViolationResponse(MethodArgumentNotValidException ex) {
 		Map<String, ResponseApi> errors = new HashMap<>();
 		ex.getBindingResult().getAllErrors().forEach((error) -> {
 			String fieldName = ((FieldError) error).getField();
@@ -79,6 +87,40 @@ public class ResponseApiFactory extends ResponseApi {
 			errors.put(fieldName, response);
 		});
 		return errors;
-		
+
 	}
+
+	public Map<String, ResponseApi> createNewConstraintViolationExceptionResponse(ConstraintViolationException ex) {
+		Map<String, ResponseApi> errors = new HashMap<>();
+		ex.getConstraintViolations().forEach(violation -> {
+			String fieldname = violation.getPropertyPath().toString();
+			ResponseApi response = new ResponseApi();
+			response.setTimestamp(new Date());
+			response.setStatus(StatusEnum._400_BAD_REQUEST);
+			response.setMessage(violation.getMessage());
+			errors.put(fieldname, response);
+		});
+		return errors;
+	}
+
+	public ResponseApi createNewMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
+		ResponseApi response = new ResponseApi();
+		StringBuilder builder = new StringBuilder();
+		builder.append(ex.getMethod());
+		builder.append(" method is not supported for this request. Supported methods are ");
+		ex.getSupportedHttpMethods().forEach(t -> builder.append(t + " "));
+		response.setTimestamp(new Date());
+		response.setStatus(StatusEnum._400_BAD_REQUEST);
+		response.setMessage(builder.toString());
+		return response;
+	}
+
+	public ResponseApi createNewRollBackExceptionResponse(RollbackException ex){
+		ResponseApi response = new ResponseApi();
+		response.setTimestamp(new Date());
+		response.setStatus(StatusEnum._400_BAD_REQUEST);
+		response.setMessage(ex.getCause().getMessage());
+		return response;
+	}
+
 }

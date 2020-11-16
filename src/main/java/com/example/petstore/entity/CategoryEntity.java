@@ -14,8 +14,6 @@ import javax.validation.constraints.NotBlank;
 public class CategoryEntity {
 
 	public CategoryEntity() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public CategoryEntity(Long id, @NotBlank String name) {
@@ -26,11 +24,11 @@ public class CategoryEntity {
 
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "category_id")
 	private Long id;
 	@NotBlank
-	@Column(name = "name", unique = true)
+	@Column(name = "name")
 	private String name;
 
 	public Long getId() {

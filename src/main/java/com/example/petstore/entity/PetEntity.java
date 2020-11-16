@@ -43,7 +43,7 @@ public class PetEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pet_id")
 	private Long id;
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "category_id")
 	private CategoryEntity category;
 	@NotBlank
@@ -52,7 +52,7 @@ public class PetEntity {
 	@Column(name = "photos")
 	@ElementCollection
 	private List<String> photoUrls;
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<TagEntity> tags;
 	@NotBlank
 	@Column(name = "status")

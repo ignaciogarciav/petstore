@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -53,9 +52,6 @@
 			<artifactId>java-jwt</artifactId>
 			<version>3.10.3</version>
 		</dependency>
-
-
-
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -112,7 +108,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>C:/Users/alvar/git/petstore/src/main/resources/swagger.yaml</inputSpec>
+							<inputSpec>C:/Users/Ignacio/git/petstore/src/main/resources/swagger.yaml</inputSpec>
 							<language>spring</language>
 							<modelPackage>com.example.generated.model</modelPackage>
 							<apiPackage>com.example.generated.api</apiPackage>
@@ -137,7 +133,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>C:/Users/alvar/git/petstore/target/generated-sources/swagger/src/main/java/</source>
+								<source>C:/Users/Ignacio/git/petstore/target/generated-sources/swagger/src/main/java/</source>
 							</sources>
 						</configuration>
 					</execution>

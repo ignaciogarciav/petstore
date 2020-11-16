@@ -17,4 +17,5 @@ public interface JWTService {
 	String getUsername(String token);
 	
 	String resolve(String token);
+	
 }

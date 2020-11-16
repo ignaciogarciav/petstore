@@ -29,8 +29,12 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public ResponseApi placerOrder(Order order) {
-		orderRepository.save(orderMapper.mapToEntity(order));
-		return responseFactory.createNew201Response();
+		try {
+			orderRepository.save(orderMapper.mapToEntity(order));
+			return responseFactory.createNew201Response();
+		} catch (NullPointerException e) {
+			throw new NullPointerException("Invalid status");
+		}
 	}
 
 	@Override

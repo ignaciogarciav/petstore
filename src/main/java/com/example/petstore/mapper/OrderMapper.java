@@ -11,7 +11,6 @@ public class OrderMapper {
 	
 	public OrderEntity mapToEntity(Order order) {
 		OrderEntity orderEntity = new OrderEntity();
-		orderEntity.setId(order.getId());
 		orderEntity.setPetId(order.getPetId());
 		orderEntity.setQuantity(order.getQuantity());
 		orderEntity.setShipDate(order.getShipDate());

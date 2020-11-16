@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+
 @Entity
 @Table(name = "user")
 public class UserEntity {
@@ -58,6 +59,7 @@ public class UserEntity {
 	@NotNull
 	@Column(name = "userstatus")
 	private Integer userStatus;
+
 
 	public Long getId() {
 		return id;
@@ -122,4 +124,5 @@ public class UserEntity {
 	public void setUserStatus(Integer userStatus) {
 		this.userStatus = userStatus;
 	}
+
 }
