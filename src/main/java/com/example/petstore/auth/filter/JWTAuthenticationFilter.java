@@ -44,8 +44,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String password = request.getParameter("password");
 
 		if(username != null && password !=null) {
-			logger.info("Username desde request parameter (form-data): " + username);
-			logger.info("Password desde request parameter (form-data): " + password);
+			logger.info("Username from request parameter (form-data): " + username);
+			logger.info("Password from request parameter (form-data): " + password);
 			
 		} else {
 			UserEntity userEntity = null;
@@ -56,8 +56,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				username = userEntity.getUsername();
 				password = userEntity.getPassword();
 				
-				logger.info("Username desde request InputStream (raw): " + username);
-				logger.info("Password desde request InputStream (raw): " + password);
+				logger.info("Username from request InputStream (raw): " + username);
+				logger.info("Password from request InputStream (raw): " + password);
 				
 			} catch (JsonParseException e) {
 				e.printStackTrace();

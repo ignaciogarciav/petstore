@@ -26,7 +26,8 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 //				.antMatchers("/**").permitAll()
 				.anyRequest().authenticated().and()
 				.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtService))
-				.addFilter(new JWTAuthorizationFilter(authenticationManager())).sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().headers().frameOptions().sameOrigin();
+				.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtService))
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and().headers().frameOptions().sameOrigin();
 	}
 }
