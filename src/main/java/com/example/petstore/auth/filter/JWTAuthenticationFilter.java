@@ -33,7 +33,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTService jwtService) {
 		this.authenticationManager = authenticationManager;
-		setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "GET"));
+		setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
 		this.jwtService = jwtService;
 	}
 

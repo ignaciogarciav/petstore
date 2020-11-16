@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import com.example.petstore.auth.filter.JWTAuthenticationFilter;
 import com.example.petstore.auth.filter.JWTAuthorizationFilter;
 import com.example.petstore.auth.service.JWTService;
+import com.example.petstore.exceptions.MyTokenException;
 
 @Configuration
 @EnableWebSecurity
@@ -27,6 +28,8 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated().and()
 				.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtService))
 				.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtService))
+				.exceptionHandling().authenticationEntryPoint(new MyTokenException())
+				.and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and().headers().frameOptions().sameOrigin();
 	}
