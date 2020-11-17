@@ -36,11 +36,11 @@ public class JWTServiceImpl implements JWTService {
 
 	@Override
 	public UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-		String token = request.getHeader(JWTServiceImpl.HEADER_STRING);
+		String token = request.getHeader(HEADER_STRING);
 		if (token != null) {
-			String user = JWT.require(Algorithm.HMAC512(JWTServiceImpl.SECRET))
+			String user = JWT.require(Algorithm.HMAC512(SECRET))
 					.build()
-					.verify(token.replace(JWTServiceImpl.TOKEN_PREFIX, ""))
+					.verify(token.replace(TOKEN_PREFIX, ""))
 					.getSubject();
 
 			if (user != null) {
